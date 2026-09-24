@@ -1,0 +1,472 @@
+.dealer-contact {
+  padding: var(--section-padding);
+  background: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.dealer-contact__mesh {
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-mesh);
+  pointer-events: none;
+}
+
+.dealer-contact__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+  position: relative;
+}
+
+.dealer-contact__info .section-title {
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+}
+
+.dealer-contact__desc {
+  font-size: 1rem;
+  color: var(--gray-500);
+  line-height: 1.75;
+  margin-bottom: 28px;
+}
+
+.dealer-contact__whatsapp-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 32px;
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  color: var(--white);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all var(--transition-spring);
+  margin-bottom: 28px;
+  box-shadow: 0 6px 24px rgba(37, 211, 102, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.dealer-contact__wa-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  animation: shimmer 3s infinite;
+  pointer-events: none;
+}
+
+.dealer-contact__whatsapp-cta:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 40px rgba(37, 211, 102, 0.45), 0 0 60px rgba(37, 211, 102, 0.15);
+}
+
+.dealer-contact__wa-icon { font-size: 2rem; }
+.dealer-contact__wa-label { display: block; font-size: 0.78rem; font-weight: 600; opacity: 0.85; }
+.dealer-contact__wa-number { display: block; font-size: 1.35rem; font-weight: 800; }
+
+/* Interactive Pincode Checker Card */
+.pincode-card {
+  background: var(--white);
+  border: 2px solid rgba(34, 197, 94, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.pincode-card:hover {
+  border-color: var(--green-primary);
+  box-shadow: 0 12px 36px rgba(34, 197, 94, 0.14), 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.pincode-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pincode-card__icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  padding: 8px;
+  background: var(--green-50);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.pincode-card__title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--blue-dark);
+  margin-bottom: 4px;
+}
+
+.pincode-card__desc {
+  font-size: 0.82rem;
+  color: var(--gray-500);
+  line-height: 1.4;
+}
+
+.pincode-card__form {
+  margin-bottom: 14px;
+}
+
+.pincode-card__input-wrap {
+  display: flex;
+  gap: 10px;
+}
+
+.pincode-card__input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  transition: all var(--transition-fast);
+}
+
+.pincode-card__input:focus {
+  border-color: var(--green-primary);
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+  outline: none;
+}
+
+.pincode-card__btn {
+  padding: 12px 20px;
+  background: var(--green-primary);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-spring);
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+}
+
+.pincode-card__btn:hover {
+  background: var(--green-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+}
+
+/* Suggestion Chips */
+.pincode-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.pincode-card__chips-label {
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pincode-chip {
+  padding: 5px 10px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.pincode-chip:hover {
+  background: var(--green-50);
+  border-color: var(--green-primary);
+  color: var(--green-dark);
+  transform: translateY(-1px);
+}
+
+.pincode-chip--active {
+  background: var(--green-primary);
+  border-color: var(--green-primary);
+  color: var(--white);
+}
+
+/* Pincode Result Banner */
+.pincode-result {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  margin-top: 12px;
+  animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.pincode-result--available {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #22c55e;
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.15);
+}
+
+.pincode-result--unavailable {
+  background: #fffbeb;
+  border: 2px solid #f59e0b;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.1);
+}
+
+.pincode-result--invalid {
+  background: #fef2f2;
+  border: 2px solid #ef4444;
+}
+
+.pincode-result__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.pincode-result__badge-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.pincode-result__message {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--gray-900);
+  line-height: 1.35;
+}
+
+.pincode-result--available .pincode-result__message {
+  color: #15803d;
+}
+
+.pincode-result--unavailable .pincode-result__message {
+  color: #b45309;
+}
+
+.pincode-result--invalid .pincode-result__message {
+  color: #b91c1c;
+}
+
+.pincode-result__subtext {
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+.pincode-result__action {
+  margin-top: 10px;
+}
+
+.pincode-result__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.pincode-result__cta:hover {
+  color: #047857;
+}
+
+/* Points */
+.dealer-contact__points {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dealer-contact__point {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.92rem;
+  color: var(--gray-600);
+  font-weight: 500;
+  transition: transform var(--transition-fast);
+}
+
+.dealer-contact__point:hover {
+  transform: translateX(6px);
+}
+
+/* Form */
+.dealer-contact__form-wrap {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  padding: 40px 32px;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.dealer-contact__form-wrap:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.dealer-contact__form-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--blue-dark);
+  margin-bottom: 24px;
+}
+
+.dealer-contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gray-500);
+}
+
+.form-field input,
+.form-field select {
+  padding: 13px 16px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  background: var(--white);
+  transition: all var(--transition-fast);
+  color: var(--gray-800);
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+  outline: none;
+}
+
+.form-field input::placeholder { color: var(--gray-400); }
+
+.form-error {
+  font-size: 0.73rem;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* Form Pincode Feedback Badge */
+.form-pincode-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  animation: pop-in 0.25s ease-out;
+}
+
+.form-pincode-badge--available {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #166534;
+}
+
+.form-pincode-badge--unavailable {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+.form-pincode-badge__icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.form-submit {
+  padding: 16px 28px;
+  background: var(--gradient-green);
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-spring);
+  margin-top: 4px;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+}
+
+.form-submit__shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  animation: shimmer 3s infinite;
+  pointer-events: none;
+}
+
+.form-submit:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 28px rgba(34, 197, 94, 0.35);
+}
+
+/* Success */
+.dealer-contact__success {
+  text-align: center;
+  padding: 48px 20px;
+}
+
+.dealer-contact__success-icon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.dealer-contact__success h3 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--green-primary);
+  margin-bottom: 12px;
+}
+
+.dealer-contact__success p {
+  color: var(--gray-500);
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .dealer-contact__inner { grid-template-columns: 1fr; gap: 40px; }
+}
+
+@media (max-width: 500px) {
+  .form-row { grid-template-columns: 1fr; }
+  .pincode-card__input-wrap { flex-direction: column; }
+  .dealer-contact__form-wrap { padding: 28px 20px; }
+}
