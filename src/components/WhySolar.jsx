@@ -1,73 +1,98 @@
-import { useLanguage } from '../context/LanguageContext';
-import useScrollReveal from '../hooks/useScrollReveal';
+import { useEffect, useRef } from 'react';
 import './WhySolar.css';
 
-const benefitIcons = [
-  { icon: '☀️', gradient: 'linear-gradient(135deg, #fef9c3, #fde68a)', glow: 'rgba(250, 204, 21, 0.15)' },
-  { icon: '💰', gradient: 'linear-gradient(135deg, #dcfce7, #bbf7d0)', glow: 'rgba(34, 197, 94, 0.15)' },
-  { icon: '🏠', gradient: 'linear-gradient(135deg, #dbeafe, #bfdbfe)', glow: 'rgba(59, 130, 246, 0.15)' },
-  { icon: '🔋', gradient: 'linear-gradient(135deg, #ede9fe, #ddd6fe)', glow: 'rgba(124, 58, 237, 0.15)' },
-  { icon: '🛡️', gradient: 'linear-gradient(135deg, #ccfbf1, #99f6e4)', glow: 'rgba(13, 148, 136, 0.15)' },
+const benefits = [
+  {
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="5" />
+        <line x1="12" y1="1" x2="12" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="23" />
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+        <line x1="1" y1="12" x2="3" y2="12" />
+        <line x1="21" y1="12" x2="23" y2="12" />
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+      </svg>
+    ),
+    title: 'Generate Clean Energy',
+    desc: 'Harness Malda’s high solar irradiance directly on your rooftop, drastically cutting your reliance on the conventional power grid.',
+  },
+  {
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23" />
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
+    ),
+    title: 'Slash Electricity Bills',
+    desc: 'Offset expensive tiered electricity tariffs by up to 80–90% during peak daytime hours, shielding your family from future tariff hikes.',
+  },
+  {
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+    ),
+    title: 'Engineered for Homes',
+    desc: 'From compact 1 kW setups to robust 10 kW high-output configurations, each system is calibrated for your roof geometry and domestic loads.',
+  },
+  {
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+      </svg>
+    ),
+    title: 'WBSEDCL Net-Metering',
+    desc: 'Export surplus generated daytime units back to the West Bengal state grid, earning bill credits that offset your nighttime consumption.',
+  },
 ];
 
 export default function WhySolar() {
-  const { t } = useLanguage();
-  const [headerRef, headerVisible] = useScrollReveal();
-  const [gridRef, gridVisible] = useScrollReveal({ threshold: 0.1 });
+  const sectionRef = useRef(null);
+  const gridRef = useRef(null);
 
-  const handleMouseMove = (e) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    card.style.setProperty('--mouse-x', `${x}px`);
-    card.style.setProperty('--mouse-y', `${y}px`);
-
-    const rotateX = ((y - rect.height / 2) / rect.height) * -8;
-    const rotateY = ((x - rect.width / 2) / rect.width) * 8;
-    card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
-  };
-
-  const handleMouseLeave = (e) => {
-    e.currentTarget.style.transform = '';
-  };
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal--visible');
+            if (gridRef.current) gridRef.current.classList.add('stagger-children--visible');
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section className="why-solar" id="why-solar">
-      {/* Decorative blobs */}
-      <div className="why-solar__blob why-solar__blob--1" aria-hidden="true"></div>
-      <div className="why-solar__blob why-solar__blob--2" aria-hidden="true"></div>
-
       <div className="container">
-        <div ref={headerRef} className={`why-solar__header reveal ${headerVisible ? 'reveal--visible' : ''}`}>
-          <span className="section-label">{t.whySolar.badge}</span>
-          <h2 className="section-title">{t.whySolar.title}</h2>
-          <p className="section-subtitle">
-            {t.whySolar.subtitle}
+        <div className="why-solar__header reveal" ref={sectionRef}>
+          <span className="eyebrow">Why Choose Solar</span>
+          <h2 className="section-title why-solar__title">
+            The Smarter, Cleaner Way<br />to Power Your Home
+          </h2>
+          <p className="section-subtitle why-solar__subtitle">
+            Rooftop solar turns an ongoing monthly expense into an appreciating household asset. Generate your own power with proven LOOM Solar technology.
           </p>
         </div>
 
-        <div ref={gridRef} className={`why-solar__grid stagger-children ${gridVisible ? 'stagger-children--visible' : ''}`}>
-          {t.whySolar.benefits.map((item, i) => {
-            const visual = benefitIcons[i] || benefitIcons[0];
-            return (
-              <article
-                className="benefit-card"
-                key={i}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-                style={{ '--card-glow': visual.glow }}
-              >
-                <div className="benefit-card__spotlight"></div>
-                <div className="benefit-card__icon" style={{ background: visual.gradient }}>
-                  <span>{visual.icon}</span>
-                </div>
-                <h3 className="benefit-card__title">{item.title}</h3>
-                <p className="benefit-card__desc">{item.desc}</p>
-                <div className="benefit-card__number">{String(i + 1).padStart(2, '0')}</div>
-              </article>
-            );
-          })}
+        <div className="why-solar__grid stagger-children" ref={gridRef}>
+          {benefits.map((b, i) => (
+            <div className="why-solar__card" key={i}>
+              <div className="why-solar__card-icon">{b.icon}</div>
+              <h3 className="why-solar__card-title">{b.title}</h3>
+              <p className="why-solar__card-desc">{b.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

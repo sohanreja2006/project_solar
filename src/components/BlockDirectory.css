@@ -1,0 +1,451 @@
+/* ─────────────────────────────────────────────────────────────
+   BlockDirectory.css — 15 Blocks & Gram Panchayats Showcase
+   ───────────────────────────────────────────────────────────── */
+
+.bdir-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, #f8fafc 0%, #fffbeb 50%, #f8fafc 100%);
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  position: relative;
+}
+
+.bdir-header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 40px;
+}
+
+.bdir-search-wrap {
+  position: relative;
+  max-width: 540px;
+  margin: 24px auto 0;
+}
+
+.bdir-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.bdir-search-input {
+  width: 100%;
+  padding: 14px 44px 14px 46px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 999px;
+  font-size: 0.96rem;
+  color: #0f172a;
+  outline: none;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.bdir-search-input:focus {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.18), 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+.bdir-search-input::placeholder {
+  color: #94a3b8;
+}
+
+.bdir-search-clear {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #e2e8f0;
+  border: none;
+  color: #475569;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: background 0.2s;
+}
+
+.bdir-search-clear:hover {
+  background: #cbd5e1;
+  color: #0f172a;
+}
+
+/* Search results bar */
+.bdir-results-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 12px 18px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.92rem;
+  color: #334155;
+}
+
+.bdir-clear-link {
+  background: none;
+  border: none;
+  color: #d97706;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+.bdir-clear-link:hover {
+  text-decoration: underline;
+}
+
+.bdir-empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+}
+
+/* ── 15 Blocks Interactive Tab Pills ── */
+.bdir-blocks-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+
+.bdir-block-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+.bdir-pill-num {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.bdir-pill-count {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.bdir-block-pill:hover {
+  border-color: #f59e0b;
+  color: #b45309;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.15);
+}
+
+.bdir-block-pill--active {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-color: #d97706;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.35);
+  transform: translateY(-2px);
+}
+
+.bdir-block-pill--active .bdir-pill-num {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.bdir-block-pill--active .bdir-pill-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* ── Block Details Panel ── */
+.bdir-block-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 32px 36px;
+  box-shadow: 0 20px 50px -15px rgba(15, 23, 42, 0.08);
+  animation: bdirFadeIn 0.3s ease;
+}
+
+@keyframes bdirFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bdir-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+}
+
+.bdir-panel-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #d97706;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.bdir-panel-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px;
+}
+
+.bdir-panel-sub {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Dealer Box inside header */
+.bdir-dealer-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 16px 20px;
+  min-width: 280px;
+}
+
+.bdir-dealer-box__head {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.bdir-dealer-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #059669;
+  letter-spacing: 0.08em;
+}
+
+.bdir-head-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.bdir-head-role {
+  font-size: 0.76rem;
+  color: #64748b;
+}
+
+.bdir-block-dealers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bdir-dealer-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.86rem;
+}
+
+.bdir-dealer-item strong {
+  color: #0f172a;
+  display: block;
+  font-size: 0.88rem;
+}
+
+.bdir-item-role {
+  font-size: 0.72rem;
+  color: #d97706;
+  font-weight: 700;
+  display: block;
+}
+
+.bdir-dealer-tel {
+  color: #0284c7;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.82rem;
+  padding: 4px 10px;
+  background: #e0f2fe;
+  border-radius: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.bdir-dealer-tel:hover {
+  background: #bae6fd;
+}
+
+/* ── GP Section ── */
+.bdir-gp-section {
+  margin-top: 28px;
+}
+
+.bdir-gp-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  font-size: 1.05rem;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.bdir-gp-counter {
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #fef3c7;
+  color: #b45309;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid #fde68a;
+}
+
+/* ── GP Cards Grid ── */
+.bdir-gp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.bdir-gp-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.bdir-gp-card:hover {
+  background: #ffffff;
+  border-color: #f59e0b;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.12);
+}
+
+.bdir-gp-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.bdir-gp-num {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #94a3b8;
+}
+
+.bdir-gp-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  letter-spacing: 0.05em;
+}
+
+.bdir-gp-name {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+
+.bdir-gp-sub {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 0 0 14px;
+}
+
+.bdir-gp-block-tag {
+  font-size: 0.78rem;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.bdir-gp-dealer-hint {
+  font-size: 0.76rem;
+  color: #475569;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 12px;
+  background: #ffffff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.bdir-gp-call {
+  color: #0284c7;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.bdir-gp-apply-btn {
+  width: 100%;
+  padding: 9px 12px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: auto;
+  text-align: center;
+}
+
+.bdir-gp-card:hover .bdir-gp-apply-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-color: #d97706;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .bdir-section {
+    padding: 56px 0;
+  }
+  .bdir-block-panel {
+    padding: 24px 18px;
+  }
+  .bdir-gp-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}

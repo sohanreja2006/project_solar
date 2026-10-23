@@ -1,140 +1,129 @@
-import { useLanguage } from '../context/LanguageContext';
-import useScrollReveal from '../hooks/useScrollReveal';
+import { useEffect, useRef } from 'react';
 import './Distributor.css';
 
-const WHATSAPP_DISTRIBUTOR = 'https://wa.me/917001516219?text=Hello%20MD%20Samayun%20Reja%20Ji%2C%20I%20am%20interested%20in%20LOOM%20Solar%20rooftop%20system%20for%20my%20home%20in%20Malda.';
+const WHATSAPP_LINK = 'https://wa.me/917001516219?text=Hi%2C%20I%20am%20interested%20in%20rooftop%20solar%20for%20my%20home%20in%20Malda.';
 
 export default function Distributor() {
-  const { t } = useLanguage();
-  const [ref, isVisible] = useScrollReveal({ threshold: 0.1 });
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('stagger-children--visible');
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section className="distributor" id="distributor">
-      <div className="distributor__mesh" aria-hidden="true"></div>
       <div className="container">
-        <div ref={ref} className={`distributor__inner reveal ${isVisible ? 'reveal--visible' : ''}`}>
-          
-          {/* Section Header */}
-          <div className="distributor__header">
-            <span className="section-label">{t.distributor.badge}</span>
-            <h2 className="section-title">{t.distributor.title}</h2>
-            <p className="section-subtitle">
-              {t.distributor.subtitle}
-            </p>
-          </div>
+        <div className="distributor__inner stagger-children" ref={sectionRef}>
 
-          <div className="distributor__card">
-            {/* Profile Column */}
-            <div className="distributor__profile">
-              <div className="distributor__avatar-wrap">
-                <img
-                  src="/images/distributor.jpg"
-                  alt="MD SAMAYUN REJA - SR Distributor Malda, LOOM Solar - Trimurti Solar Systems"
-                  className="distributor__avatar"
-                />
-                <div className="distributor__badge">
-                  <span className="distributor__badge-icon">✓</span>
-                  <span>{t.distributor.authBadge}</span>
-                </div>
-              </div>
-
-              {/* SR Distributor Logo Under Photo */}
-              <div className="distributor__logo-wrap">
-                <img
-                  src="/images/sr-logo.png"
-                  alt="SR DISTRIBUTOR Logo - Malda"
-                  className="distributor__logo-img"
-                />
-                <span className="distributor__logo-caption">{t.distributor.logoCaption}</span>
-              </div>
-
-              <div className="distributor__meta">
-                <h3 className="distributor__name">{t.distributor.name}</h3>
-                <p className="distributor__role">{t.distributor.role}</p>
-                <p className="distributor__company">{t.distributor.company}</p>
-                <div className="distributor__location">
-                  <span>📍</span> {t.distributor.location}
-                </div>
-              </div>
-
-              <a
-                href={WHATSAPP_DISTRIBUTOR}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="distributor__cta-btn"
-                id="distributor-whatsapp-btn"
-              >
-                <span className="distributor__btn-shimmer"></span>
-                <span>{t.distributor.chatBtn}</span>
-              </a>
+          {/* Portrait & Credentials Column */}
+          <div className="distributor__portrait-col">
+            <div className="distributor__portrait-frame">
+              <img
+                src="/images/distributor.jpg"
+                alt="SR Distributor – Malda representative"
+                className="distributor__portrait-img"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentElement.classList.add('distributor__portrait-frame--placeholder');
+                }}
+              />
+              <div className="distributor__portrait-overlay"></div>
             </div>
 
-            {/* Message Column */}
-            <div className="distributor__content">
-              <div className="distributor__quote-icon" aria-hidden="true">“</div>
-
-              <div className="distributor__letter">
-                <p className="distributor__salutation">{t.distributor.salutation}</p>
-
-                <p className="distributor__paragraph">
-                  {t.distributor.p1}
-                </p>
-
-                <p className="distributor__paragraph">
-                  {t.distributor.p2}
-                </p>
-
-                <p className="distributor__paragraph">
-                  {t.distributor.p3}
-                </p>
-
-                <p className="distributor__paragraph distributor__paragraph--callout">
-                  {t.distributor.p4}
-                </p>
+            {/* Verification Card */}
+            <div className="distributor__credentials-card">
+              <div className="distributor__card-logos">
+                <img
+                  src="/images/loom-solar-logo.png"
+                  alt="LOOM Solar"
+                  className="distributor__card-loom-logo"
+                />
+                <span className="distributor__card-sep">&bull;</span>
+                <img
+                  src="/images/sr-logo.png"
+                  alt="SR Logo"
+                  className="distributor__card-sr-logo"
+                />
               </div>
+              <div className="distributor__card-details">
+                <span className="distributor__card-eyebrow">Authorized Distributor</span>
+                <h4 className="distributor__card-title">Trimurti Solar Systems</h4>
+                <p className="distributor__card-desc">SR Distributor &bull; Malda, West Bengal</p>
 
-              {/* Trust Pillars */}
-              <div className="distributor__pillars">
-                <div className="distributor__pillar">
-                  <span className="distributor__pillar-icon">☀️</span>
-                  <div>
-                    <strong>{t.distributor.pillar1Title}</strong>
-                    <span>{t.distributor.pillar1Sub}</span>
+                {/* Associated Brand Logos */}
+                <div className="distributor__assoc-logos">
+                  <div className="distributor__assoc-logo-item">
+                    <img src="/images/nexis-logo.png" alt="NEXIS Renewable Energy" className="distributor__assoc-img" />
+                  </div>
+                  <div className="distributor__assoc-logo-item">
+                    <img src="/images/tss-logo.jpeg" alt="TSS Green Solar Energy" className="distributor__assoc-img" />
                   </div>
                 </div>
-                <div className="distributor__pillar">
-                  <span className="distributor__pillar-icon">💰</span>
-                  <div>
-                    <strong>{t.distributor.pillar2Title}</strong>
-                    <span>{t.distributor.pillar2Sub}</span>
-                  </div>
-                </div>
-                <div className="distributor__pillar">
-                  <span className="distributor__pillar-icon">🤝</span>
-                  <div>
-                    <strong>{t.distributor.pillar3Title}</strong>
-                    <span>{t.distributor.pillar3Sub}</span>
-                  </div>
+                <div className="distributor__card-points">
+                  <span>&#10003; Official LOOM Solar Channel Partner</span>
+                  <span>&#10003; WBSEDCL Net-Metering Facilitation</span>
+                  <span>&#10003; Certified Installation & Field Support</span>
                 </div>
               </div>
+            </div>
+          </div>
 
-              {/* Signoff */}
-              <div className="distributor__signoff">
-                <div className="distributor__signoff-text">
-                  <p className="distributor__warm-regards">{t.distributor.warmRegards}</p>
-                  <p className="distributor__signature-name">{t.distributor.name}</p>
-                  <p className="distributor__signature-title">{t.distributor.role} | {t.distributor.company}</p>
-                  <p className="distributor__signature-phone">📞 {t.distributor.helpline} <strong>+91 7001516219</strong></p>
-                </div>
-                <div className="distributor__seal">
-                  <div className="distributor__seal-inner">
-                    <span>{t.distributor.sealOfficial}</span>
-                    <strong>{t.distributor.sealDist}</strong>
-                    <span>{t.distributor.sealMalda}</span>
-                  </div>
-                </div>
-              </div>
+          {/* Letter / Message */}
+          <div className="distributor__message">
+            <span className="eyebrow">Official Distributor Statement</span>
+            <h2 className="section-title distributor__title">
+              A Personal Note From Your Local Solar Partner
+            </h2>
 
+            <div className="distributor__letter">
+              <p className="distributor__salutation">Dear Residents of Malda,</p>
+              <p>
+                As the authorized SR Distributor for <strong>LOOM Solar</strong> under <strong>Trimurti Solar Systems</strong>, our commitment is to provide homeowners across Malda district with authentic, tier-1 solar technology that stands the test of time.
+              </p>
+              <p>
+                Electricity costs are rising, but Malda enjoys abundant sunshine year-round. Rooftop solar is not merely an alternative power source — it is a sound financial decision that protects your household budget for the next 25 years.
+              </p>
+              <p>
+                With the Central Government's <strong>PM Surya Ghar Muft Bijli Yojana</strong> and <strong>WBSEDCL net-metering</strong>, adopting solar has never been more accessible or financially advantageous.
+              </p>
+              <p>
+                Our local Malda team handles everything from initial rooftop shadow analysis and load sizing to subsidy documentation, meter approval, and professional installation.
+              </p>
+              <p className="distributor__signoff">
+                Warm regards,<br />
+                <strong>Trimurti Solar Systems</strong><br />
+                <span className="distributor__signoff-tag">SR Distributor – Malda &bull; LOOM Solar Channel Partner</span>
+              </p>
+            </div>
+
+            <div className="distributor__actions">
+              <a
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-whatsapp distributor__cta"
+                id="distributor-whatsapp-btn"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                Connect on WhatsApp
+              </a>
+              <a href="tel:+917001516219" className="btn-outline distributor__call-btn">
+                &#9742; Call: 7001516219
+              </a>
             </div>
           </div>
         </div>

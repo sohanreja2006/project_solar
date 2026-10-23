@@ -1,0 +1,140 @@
+/* ===== SERVICE PROVIDERS SECTION ===== */
+.service-providers {
+  padding: var(--section-pad);
+  background: var(--off-white);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Soft radial glow behind the cards */
+.service-providers::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201, 168, 76, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ---- Header ---- */
+.service-providers__header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 64px;
+}
+
+/* ---- Card Grid ---- */
+.service-providers__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+/* ---- Individual Card ---- */
+.sp-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  padding: 36px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+  cursor: default;
+}
+
+.sp-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.09);
+  border-color: var(--gold-border);
+}
+
+/* Animated shine sweep on hover */
+.sp-card__shine {
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 100%
+  );
+  transform: skewX(-15deg);
+  pointer-events: none;
+  transition: left 0.55s var(--ease);
+}
+
+.sp-card:hover .sp-card__shine {
+  left: 130%;
+}
+
+/* ---- Logo Wrap ---- */
+.sp-card__logo-wrap {
+  width: 120px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-100);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  border: 1px solid var(--gray-200);
+  transition: background 0.3s var(--ease);
+}
+
+.sp-card:hover .sp-card__logo-wrap {
+  background: var(--white);
+  border-color: var(--gold-border);
+}
+
+.sp-card__logo {
+  max-width: 100%;
+  max-height: 72px;
+  object-fit: contain;
+  display: block;
+}
+
+/* ---- Body ---- */
+.sp-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sp-card__name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.sp-card__desc {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 860px) {
+  .service-providers__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .service-providers__grid {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+}

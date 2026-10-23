@@ -1,25 +1,13 @@
 import { useState, useEffect } from 'react';
-import { useLanguage } from '../context/LanguageContext';
 import './WhatsAppFloat.css';
 
 const WHATSAPP_LINK = 'https://wa.me/917001516219?text=Hi%2C%20I%20am%20interested%20in%20rooftop%20solar%20for%20my%20home%20in%20Malda.';
 
 export default function WhatsAppFloat() {
-  const { t } = useLanguage();
   const [visible, setVisible] = useState(false);
-  const [pulse, setPulse] = useState(true);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setVisible(window.scrollY > 300);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Stop pulse after 10 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => setPulse(false), 10000);
+    const timer = setTimeout(() => setVisible(true), 1500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -28,15 +16,14 @@ export default function WhatsAppFloat() {
       href={WHATSAPP_LINK}
       target="_blank"
       rel="noopener noreferrer"
-      className={`whatsapp-float ${visible ? 'whatsapp-float--visible' : ''} ${pulse ? 'whatsapp-float--pulse' : ''}`}
-      aria-label="Chat on WhatsApp"
-      title={t.whatsappFloat?.tooltip || 'WhatsApp'}
+      className={`wa-float ${visible ? 'wa-float--visible' : ''}`}
+      aria-label="Chat on WhatsApp — 7001516219"
       id="whatsapp-float-btn"
     >
-      <svg viewBox="0 0 32 32" width="28" height="28" fill="white">
-        <path d="M16.004 0C7.163 0 .004 7.159.004 15.999c0 2.82.736 5.573 2.137 7.998L.017 32l8.22-2.156A15.948 15.948 0 0 0 16.004 32C24.844 32 32 24.841 32 16.001 32 7.159 24.844 0 16.004 0zm0 29.377a13.36 13.36 0 0 1-7.211-2.102l-.517-.307-5.359 1.405 1.428-5.217-.336-.535A13.334 13.334 0 0 1 2.636 16C2.636 8.619 8.622 2.633 16.004 2.633c7.381 0 13.367 5.986 13.367 13.367 0 7.382-5.986 13.377-13.367 13.377zm7.331-10.009c-.402-.201-2.379-1.174-2.748-1.308-.37-.134-.639-.201-.908.201-.268.402-1.04 1.308-1.274 1.576-.235.268-.469.302-.871.101-.402-.201-1.697-.625-3.233-1.994-1.195-1.065-2.001-2.381-2.236-2.783-.235-.402-.025-.619.177-.819.181-.181.402-.469.603-.704.201-.235.268-.402.402-.67.134-.268.067-.503-.034-.704-.101-.201-.908-2.188-1.243-2.995-.327-.786-.66-.68-.908-.692-.235-.012-.503-.014-.771-.014-.268 0-.704.101-1.073.503-.37.402-1.408 1.376-1.408 3.356 0 1.98 1.442 3.893 1.643 4.161.201.268 2.836 4.332 6.873 6.073.961.415 1.711.662 2.296.848.965.307 1.843.264 2.538.16.774-.116 2.379-.973 2.714-1.912.335-.94.335-1.744.235-1.912-.101-.168-.37-.268-.771-.469z"/>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </svg>
-      <span className="whatsapp-float__label">{t.nav?.whatsapp || 'WhatsApp'}</span>
+      <span className="wa-float__label">WhatsApp Us</span>
     </a>
   );
 }

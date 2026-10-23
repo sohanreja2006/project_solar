@@ -1,104 +1,125 @@
 import { useState, useEffect } from 'react';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { useLanguage } from '../context/LanguageContext';
-import LanguageSwitcher from './LanguageSwitcher';
+import { Link } from 'react-router-dom';
+import { useUserAuth } from '../context/UserAuthContext';
 import './Navbar.css';
 
-const WHATSAPP_LINK = 'https://wa.me/917001516219?text=Hi%2C%20I%20am%20interested%20in%20rooftop%20solar%20for%20my%20home%20in%20Malda.';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { t } = useLanguage();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { user } = useUserAuth();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { label: t.nav.home, to: '/', type: 'route' },
-    { label: t.nav.calculator, to: '/calculator', type: 'route' },
-    { label: t.nav.subsidy, to: '/subsidy', type: 'route' },
-    { label: t.nav.distributor, to: '/#distributor', hash: '#distributor', type: 'anchor' },
-    { label: t.nav.faq, to: '/faq', type: 'route' },
-    { label: t.nav.contact, to: '/#contact', hash: '#contact', type: 'anchor' },
-  ];
-
-  const handleLinkClick = (e, link) => {
+  const scrollTo = (id) => {
     setMobileOpen(false);
-    if (link.type === 'anchor') {
-      e.preventDefault();
-      if (location.pathname === '/') {
-        document.querySelector(link.hash)?.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        navigate('/' + link.hash);
-      }
-    }
+    document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`} role="navigation" aria-label="Main navigation">
+    <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`} role="banner">
       <div className="navbar__inner container">
-        <Link to="/" className="navbar__brand" onClick={() => setMobileOpen(false)}>
-          <span className="navbar__brand-icon">☀️</span>
-          <div className="navbar__brand-text">
-            <span className="navbar__brand-name">LOOM Solar</span>
-            <span className="navbar__brand-sub">Trimurti Solar Systems</span>
+        {/* Brand with Logos Lockup */}
+        <a href="/" className="navbar__brand" aria-label="Trimurti Solar Systems Malda">
+          <img
+            src="/images/sr-logo.png"
+            alt="Trimurti Solar Systems Logo"
+            className="navbar__sr-logo"
+          />
+          <div className="navbar__brand-col">
+            <div className="navbar__brand-text">
+              <span className="navbar__brand-title">
+                <span className="brand-sr">SR</span>
+                <span className="brand-dist">DISTRIBUTOR</span>
+                <span className="brand-sep">&bull;</span>
+                <span className="brand-loc">MALDA</span>
+              </span>
+              <span className="navbar__brand-sub">Trimurti Solar Systems</span>
+            </div>
+            <div className="navbar__assoc-logos">
+              <img src="/images/nexis-logo.png" alt="NEXIS Renewable Energy" className="navbar__assoc-img" />
+              <img src="/images/tss-logo.jpeg" alt="TSS Green Solar Energy" className="navbar__assoc-img" />
+            </div>
           </div>
-        </Link>
+        </a>
 
-        <div className={`navbar__links ${mobileOpen ? 'navbar__links--open' : ''}`}>
-          {navLinks.map((link) => (
-            link.type === 'route' ? (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.to === '/'}
-                className={({ isActive }) => `navbar__link ${isActive ? 'navbar__link--active' : ''}`}
+        {/* Desktop Nav Links */}
+        <nav className={`navbar__links ${mobileOpen ? 'navbar__links--open' : ''}`} aria-label="Main Navigation">
+          <button className="navbar__link" onClick={() => scrollTo('#why-solar')}>Why Solar</button>
+          <button className="navbar__link" onClick={() => scrollTo('#systems')}>Systems</button>
+          <button className="navbar__link" onClick={() => scrollTo('#subsidy')}>Subsidy &amp; EMI</button>
+          <button className="navbar__link" onClick={() => scrollTo('#warranty')}>Warranty</button>
+          <button className="navbar__link" onClick={() => scrollTo('#how-it-works')}>Process</button>
+          <button className="navbar__link navbar__link--highlight" onClick={() => scrollTo('#apply')}>
+            Apply Online
+          </button>
+          <button className="navbar__link" onClick={() => scrollTo('#contact')}>Contact</button>
+
+          <div className="navbar__mobile-actions">
+            <a href="tel:+917001516219" className="navbar__mobile-phone">
+              &#9742; Call: 7001516219
+            </a>
+            {user ? (
+              <Link
+                to="/dashboard"
+                className="navbar__cta navbar__cta--mobile"
                 onClick={() => setMobileOpen(false)}
               >
-                {link.label}
-              </NavLink>
+                👤 My Application
+              </Link>
             ) : (
-              <a
-                key={link.to}
-                href={link.to}
-                className="navbar__link"
-                onClick={(e) => handleLinkClick(e, link)}
+              <Link
+                to="/login"
+                className="navbar__cta navbar__cta--mobile"
+                onClick={() => setMobileOpen(false)}
               >
-                {link.label}
-              </a>
-            )
-          ))}
-          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="navbar__cta">
-            📲 {t.nav.whatsapp}
-          </a>
-          {/* Mobile Language Switcher */}
-          <div className="navbar__mobile-lang">
-            <LanguageSwitcher className="lang-switcher--mobile" />
+                🔐 Login / Sign Up
+              </Link>
+            )}
           </div>
-        </div>
+        </nav>
 
-        {/* Desktop Language Switcher */}
-        <div className="navbar__desktop-lang">
-          <LanguageSwitcher />
-        </div>
+        {/* Right Actions: Phone + Auth + WhatsApp + Hamburger */}
+        <div className="navbar__right-actions">
+          <a href="tel:+917001516219" className="navbar__desktop-phone" title="Call Malda Distributor Helpline">
+            <span className="navbar__phone-icon" aria-hidden="true">&#9742;</span>
+            <span className="navbar__phone-text">7001516219</span>
+          </a>
 
-        <button
-          className={`navbar__hamburger ${mobileOpen ? 'navbar__hamburger--open' : ''}`}
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle navigation menu"
-          aria-expanded={mobileOpen}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+          {/* Auth Button */}
+          {user ? (
+            <Link to="/dashboard" className="navbar__user-btn" id="nav-account-btn" title="My Application Dashboard">
+              <div className="navbar__user-avatar">
+                {(user.fullName || user.username || 'U')[0].toUpperCase()}
+              </div>
+              <span className="navbar__user-label">My Application</span>
+            </Link>
+          ) : (
+            <Link to="/login" className="navbar__login-btn" id="nav-login-btn" title="Login or Sign Up">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
+              </svg>
+              Login
+            </Link>
+          )}
+          <button
+            className={`navbar__hamburger ${mobileOpen ? 'navbar__hamburger--open' : ''}`}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileOpen}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
       </div>
-    </nav>
+    </header>
   );
 }

@@ -1,144 +1,96 @@
 .why-solar {
-  padding: var(--section-padding);
-  background: var(--gray-50);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Decorative blurred blobs */
-.why-solar__blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  pointer-events: none;
-}
-
-.why-solar__blob--1 {
-  width: 500px;
-  height: 500px;
-  background: rgba(34, 197, 94, 0.06);
-  top: -100px;
-  left: -100px;
-  animation: orb-drift-2 20s ease-in-out infinite;
-}
-
-.why-solar__blob--2 {
-  width: 400px;
-  height: 400px;
-  background: rgba(250, 204, 21, 0.05);
-  bottom: -100px;
-  right: -100px;
-  animation: orb-drift-1 25s ease-in-out infinite;
+  padding: var(--section-pad);
+  background: var(--white);
 }
 
 .why-solar__header {
-  text-align: center;
-  margin-bottom: 60px;
-  position: relative;
+  max-width: 600px;
+  margin-bottom: 64px;
 }
 
-.why-solar__header .section-subtitle { margin: 0 auto; }
-.why-solar__header .section-label::before { display: none; }
+.why-solar__title {
+  margin-bottom: 20px;
+}
+
+.why-solar__subtitle {
+  max-width: 520px;
+}
 
 .why-solar__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  position: relative;
-}
-
-/* 3D Tilt Card */
-.benefit-card {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  padding: 36px 28px;
-  box-shadow: var(--shadow-card);
-  transition: box-shadow var(--transition-base);
-  position: relative;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--gray-200);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  will-change: transform;
-  cursor: default;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-xs);
 }
 
-/* Mouse-following spotlight */
-.benefit-card__spotlight {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: var(--card-glow);
-  top: var(--mouse-y, 50%);
-  left: var(--mouse-x, 50%);
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-  filter: blur(40px);
+.why-solar__card {
+  background: var(--white);
+  padding: 44px 32px;
+  transition: all var(--t-fast) var(--ease);
 }
 
-.benefit-card:hover .benefit-card__spotlight {
-  opacity: 1;
+.why-solar__card:hover {
+  background: var(--off-white);
 }
 
-.benefit-card:hover {
-  box-shadow: var(--shadow-card-hover);
-}
-
-.benefit-card__icon {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--radius-md);
+.why-solar__card-icon {
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  transition: transform var(--transition-spring);
+  background: var(--off-white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  color: var(--gold);
+  margin-bottom: 24px;
+  transition: all var(--t-fast) var(--ease);
 }
 
-.benefit-card:hover .benefit-card__icon {
-  transform: scale(1.1) rotate(-3deg);
+.why-solar__card:hover .why-solar__card-icon {
+  background: var(--charcoal);
+  border-color: var(--charcoal);
+  color: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.benefit-card__title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--blue-dark);
-  margin-bottom: 10px;
-  position: relative;
+.why-solar__card-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 12px;
+  line-height: 1.3;
 }
 
-.benefit-card__desc {
-  font-size: 0.88rem;
+.why-solar__card-desc {
+  font-size: 0.9rem;
   color: var(--gray-500);
-  line-height: 1.7;
-  position: relative;
+  line-height: 1.75;
 }
 
-.benefit-card__number {
-  position: absolute;
-  top: 16px;
-  right: 20px;
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: rgba(0, 0, 0, 0.03);
-  line-height: 1;
-  pointer-events: none;
-  transition: color var(--transition-base);
+@media (max-width: 960px) {
+  .why-solar__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.benefit-card:hover .benefit-card__number {
-  color: rgba(0, 0, 0, 0.06);
-}
-
-@media (max-width: 600px) {
+@media (max-width: 560px) {
   .why-solar__grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    border-radius: var(--radius-lg);
   }
-  .benefit-card {
-    padding: 28px 22px;
+
+  .why-solar__card {
+    padding: 32px 24px;
+  }
+
+  .why-solar__header {
+    margin-bottom: 48px;
   }
 }

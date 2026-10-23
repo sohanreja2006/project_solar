@@ -1,357 +1,325 @@
-import { useState } from 'react';
-import { useLanguage } from '../context/LanguageContext';
-import useScrollReveal from '../hooks/useScrollReveal';
+import { useState, useEffect, useRef } from 'react';
+import { checkPincodeLookup } from './PincodeChecker';
 import './DealerContact.css';
 
 const WHATSAPP_LINK = 'https://wa.me/917001516219?text=Hi%2C%20I%20am%20interested%20in%20rooftop%20solar%20for%20my%20home%20in%20Malda.';
 
-const MALDA_PINCODES = {
-  '732101': 'English Bazar / Malda Town',
-  '732102': 'Mokdumpur',
-  '732103': 'Mangalbari',
-  '732121': 'Golapganj',
-  '732122': 'Habibpur / Bulbulchandi',
-  '732123': 'Chanchal',
-  '732124': 'Gazole',
-  '732125': 'Harishchandrapur',
-  '732126': 'Manikchak',
-  '732128': 'Old Malda',
-  '732138': 'Bhaluka',
-  '732139': 'Samsi',
-  '732140': 'Tulshihatta',
-  '732141': 'Kushida',
-  '732142': 'Baisnabnagar',
-  '732143': 'Mathurapur',
-  '732201': 'Kaliachak',
-  '732202': 'Manikchak',
-  '732203': 'Mothabari',
-  '732205': 'Ratua',
-  '732206': 'Sujapur',
-  '732207': 'Mozampur',
-  '732208': 'Jalalpur',
-  '732209': 'Bedrabad',
-  '732210': 'Baishnabnagar',
-  '732216': 'Panchanandapur',
-  '733124': 'Malda Border (Gazole Area)',
-};
-
-const checkMaldaPincode = (pin, t) => {
-  const clean = (pin || '').trim();
-  if (!clean) return null;
-  if (!/^\d{6}$/.test(clean)) {
-    return { status: 'invalid', message: t.contact.invalidPin };
-  }
-  // Malda district check: starts with 732 or 733124
-  if (clean.startsWith('732') || clean === '733124') {
-    const area = MALDA_PINCODES[clean];
-    return {
-      status: 'available',
-      area: area || 'Malda District, West Bengal',
-      pincode: clean,
-      message: t.contact.congratsTitle(area, clean),
-      subtext: t.contact.congratsSubtext,
-    };
-  }
-  return {
-    status: 'unavailable',
-    pincode: clean,
-    message: t.contact.outsideTitle(clean),
-    subtext: t.contact.outsideSubtext,
-  };
-};
-
 export default function DealerContact() {
-  const { t } = useLanguage();
+  const sectionRef = useRef(null);
+  const nameInputRef = useRef(null);
   const [form, setForm] = useState({
-    name: '', mobile: '', pincode: '', block: '', village: '', bill: '', capacity: ''
+    name: '',
+    mobile: '',
+    pincode: '',
+    block: '',
+    area: '',
+    bill: '',
+    capacity: '2 KW (Recommended)',
   });
+  const [pincodeStatus, setPincodeStatus] = useState(null);
   const [submitted, setSubmitted] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [infoRef, infoVisible] = useScrollReveal();
-  const [formRef, formVisible] = useScrollReveal();
 
-  // Standalone pincode checker state
-  const [checkerPin, setCheckerPin] = useState('');
-  const [checkerResult, setCheckerResult] = useState(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('stagger-children--visible');
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
-  const handleCheckerChange = (e) => {
-    const val = e.target.value.replace(/\D/g, '').slice(0, 6);
-    setCheckerPin(val);
-    if (val.length === 6) {
-      const res = checkMaldaPincode(val, t);
-      setCheckerResult(res);
-      // Auto-sync into form if empty
-      if (!form.pincode) {
-        setForm(f => ({ ...f, pincode: val }));
+  // Listen for pincode selection from PincodeChecker component
+  useEffect(() => {
+    const handlePincodeEvent = (e) => {
+      const { pincode, area, block } = e.detail || {};
+      if (pincode) {
+        setForm((prev) => ({
+          ...prev,
+          pincode,
+          block: block || prev.block,
+          area: area || prev.area,
+        }));
+        const status = checkPincodeLookup(pincode);
+        setPincodeStatus(status);
+        setTimeout(() => {
+          nameInputRef.current?.focus();
+        }, 400);
       }
-    } else if (val.length === 0) {
-      setCheckerResult(null);
+    };
+
+    window.addEventListener('solar:select-pincode', handlePincodeEvent);
+    return () => window.removeEventListener('solar:select-pincode', handlePincodeEvent);
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let nextVal = value;
+    if (name === 'pincode') {
+      nextVal = value.replace(/\D/g, '').slice(0, 6);
+      if (nextVal.length === 6) {
+        const status = checkPincodeLookup(nextVal);
+        setPincodeStatus(status);
+        if (status && status.block && !form.block) {
+          setForm((prev) => ({ ...prev, pincode: nextVal, block: status.block, area: prev.area || status.area }));
+          return;
+        }
+      } else {
+        setPincodeStatus(null);
+      }
     }
-  };
-
-  const handleCheckerSubmit = (e) => {
-    e.preventDefault();
-    const res = checkMaldaPincode(checkerPin, t);
-    setCheckerResult(res);
-    if (res?.status === 'available') {
-      setForm(f => ({ ...f, pincode: checkerPin }));
-    }
-  };
-
-  const handleChipClick = (pin) => {
-    setCheckerPin(pin);
-    const res = checkMaldaPincode(pin, t);
-    setCheckerResult(res);
-    setForm(f => ({ ...f, pincode: pin }));
-  };
-
-  const validate = () => {
-    const errs = {};
-    if (!form.name.trim()) errs.name = `${t.contact.nameLabel} is required`;
-    if (!form.mobile.trim()) errs.mobile = `${t.contact.mobileLabel} is required`;
-    else if (!/^[6-9]\d{9}$/.test(form.mobile.trim())) errs.mobile = 'Enter a valid 10-digit mobile number';
-    if (!form.pincode.trim()) errs.pincode = `${t.contact.pincodeLabel} is required`;
-    else if (!/^\d{6}$/.test(form.pincode.trim())) errs.pincode = 'Enter a valid 6-digit PIN code';
-    if (!form.block.trim()) errs.block = `${t.contact.blockLabel} is required`;
-    if (!form.village.trim()) errs.village = `${t.contact.villageLabel} is required`;
-    if (!form.bill.trim()) errs.bill = `${t.contact.billLabel} is required`;
-    return errs;
+    setForm((prev) => ({ ...prev, [name]: nextVal }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const errs = validate();
-    setErrors(errs);
-    if (Object.keys(errs).length > 0) return;
+    const { name, mobile, pincode, block, area, bill, capacity } = form;
+    const pinNote = pincodeStatus?.type === 'available'
+      ? ` (Service Verified - ${pincodeStatus.area})`
+      : '';
 
-    const pinCheck = checkMaldaPincode(form.pincode, t);
-    const pinStatusText = pinCheck?.status === 'available' ? ' (Malda Service Zone - Available)' : ' (Outside Malda - Please contact different distributor)';
+    const msg = `*New Rooftop Solar Enquiry - Malda*%0A%0A` +
+      `*Name:* ${encodeURIComponent(name)}%0A` +
+      `*Mobile:* ${encodeURIComponent(mobile)}%0A` +
+      `*PIN Code:* ${encodeURIComponent(pincode)}${encodeURIComponent(pinNote)}%0A` +
+      `*Block:* ${encodeURIComponent(block || 'Malda')}%0A` +
+      `*Area/Village:* ${encodeURIComponent(area || 'Malda')}%0A` +
+      `*Approx Monthly Bill:* ${encodeURIComponent(bill || 'Not specified')}%0A` +
+      `*Preferred Capacity:* ${encodeURIComponent(capacity)}`;
 
-    const msg = encodeURIComponent(
-      `New Solar Enquiry from Malda:\n` +
-      `Name: ${form.name}\n` +
-      `Mobile: ${form.mobile}\n` +
-      `PIN Code: ${form.pincode}${pinStatusText}\n` +
-      `Block: ${form.block}\n` +
-      `Village/Area: ${form.village}\n` +
-      `Approx Monthly Bill: ₹${form.bill}\n` +
-      `Required Capacity: ${form.capacity || 'Not specified'}`
-    );
-    window.open(`https://wa.me/917001516219?text=${msg}`, '_blank');
+    window.open(`https://wa.me/917001516219?text=${msg}`, '_blank', 'noopener,noreferrer');
     setSubmitted(true);
   };
 
-  const handleChange = (field) => (e) => {
-    let val = e.target.value;
-    if (field === 'pincode') {
-      val = val.replace(/\D/g, '').slice(0, 6);
-    }
-    setForm({ ...form, [field]: val });
-    if (errors[field]) setErrors({ ...errors, [field]: undefined });
-  };
-
-  const formPincodeResult = form.pincode.length === 6 ? checkMaldaPincode(form.pincode, t) : null;
-
   return (
-    <section className="dealer-contact" id="contact">
-      <div className="dealer-contact__mesh" aria-hidden="true"></div>
+    <section className="contact" id="contact">
       <div className="container">
-        <div className="dealer-contact__inner">
-          <div ref={infoRef} className={`dealer-contact__info reveal-left ${infoVisible ? 'reveal-left--visible' : ''}`}>
-            <span className="section-label">{t.contact.badge}</span>
-            <h2 className="section-title">{t.contact.title}</h2>
-            <p className="dealer-contact__desc">
-              {t.contact.desc}
+        <div className="contact__inner stagger-children" ref={sectionRef}>
+          {/* Left: Info */}
+          <div className="contact__info">
+            <span className="eyebrow">Local Distribution</span>
+            <h2 className="section-title contact__title">
+              Solar Is Now Closer To Home.
+            </h2>
+            <p className="section-subtitle contact__desc">
+              Connect directly with Trimurti Solar Systems, official LOOM Solar SR Distributor for Malda district. We assist you through site evaluation, subsidy paperwork, and turnkey installation.
             </p>
 
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="dealer-contact__whatsapp-cta" id="dealer-whatsapp-btn">
-              <span className="dealer-contact__wa-shimmer"></span>
-              <span className="dealer-contact__wa-icon">📲</span>
-              <div>
-                <span className="dealer-contact__wa-label">{t.contact.waBtnLabel}</span>
-                <span className="dealer-contact__wa-number">{t.contact.waNumber}</span>
+            {/* Official Channel Card */}
+            <div className="contact__distributor-card">
+              <div className="contact__card-logos">
+                <img
+                  src="/images/sr-logo.png"
+                  alt="Trimurti Solar Systems"
+                  className="contact__sr-img"
+                />
               </div>
-            </a>
-
-            {/* Interactive Pincode Checker Card */}
-            <div className="pincode-card" id="pincode-checker-box">
-              <div className="pincode-card__header">
-                <span className="pincode-card__icon">📍</span>
-                <div>
-                  <h4 className="pincode-card__title">{t.contact.pincodeCardTitle}</h4>
-                  <p className="pincode-card__desc">{t.contact.pincodeCardDesc}</p>
+              <div className="contact__card-details">
+                <span className="contact__card-tag">Official Channel Partner</span>
+                <h4 className="contact__card-name">Trimurti Solar Systems</h4>
+                <p className="contact__card-sub">SR Distributor &bull; Malda, West Bengal</p>
+                <div className="contact__card-badges">
+                  <span>&#10003; 1 kW – 10 KW Residential</span>
+                  <span>&#10003; WBSEDCL Net-Metering</span>
+                  <span>&#10003; Doorstep Site Survey</span>
                 </div>
               </div>
-
-              <form className="pincode-card__form" onSubmit={handleCheckerSubmit}>
-                <div className="pincode-card__input-wrap">
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={6}
-                    placeholder={t.contact.pincodePlaceholder}
-                    value={checkerPin}
-                    onChange={handleCheckerChange}
-                    className="pincode-card__input"
-                    id="checker-pincode-input"
-                  />
-                  <button type="submit" className="pincode-card__btn" id="check-pincode-btn">
-                    {t.contact.checkBtn}
-                  </button>
-                </div>
-              </form>
-
-              {/* Quick Suggestion Chips */}
-              <div className="pincode-card__chips">
-                <span className="pincode-card__chips-label">{t.contact.popularLabel}</span>
-                {[
-                  { pin: '732101', name: 'English Bazar' },
-                  { pin: '732124', name: 'Gazole' },
-                  { pin: '732201', name: 'Kaliachak' },
-                  { pin: '732123', name: 'Chanchal' },
-                  { pin: '732206', name: 'Sujapur' },
-                ].map(c => (
-                  <button
-                    key={c.pin}
-                    type="button"
-                    className={`pincode-chip ${checkerPin === c.pin ? 'pincode-chip--active' : ''}`}
-                    onClick={() => handleChipClick(c.pin)}
-                  >
-                    {c.pin} ({c.name})
-                  </button>
-                ))}
-              </div>
-
-              {/* Result Notification */}
-              {checkerResult && (
-                <div className={`pincode-result pincode-result--${checkerResult.status}`}>
-                  <div className="pincode-result__header">
-                    <span className="pincode-result__badge-icon">
-                      {checkerResult.status === 'available' ? '🎉' : checkerResult.status === 'invalid' ? '⚠️' : '⚠️'}
-                    </span>
-                    <strong className="pincode-result__message">{checkerResult.message}</strong>
-                  </div>
-                  {checkerResult.subtext && (
-                    <p className="pincode-result__subtext">{checkerResult.subtext}</p>
-                  )}
-                  {checkerResult.status === 'available' && (
-                    <div className="pincode-result__action">
-                      <a
-                        href="#contact-form"
-                        className="pincode-result__cta"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          document.getElementById('contact-name')?.focus();
-                        }}
-                      >
-                        {t.contact.formCtaJump}
-                      </a>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
 
-            <div className="dealer-contact__points">
-              {t.contact.points.map((pt, i) => (
-                <div className="dealer-contact__point" key={i}>
-                  <span className="dealer-contact__point-check">✅</span> {pt}
+            {/* Direct Phone Box */}
+            <div className="contact__phone-box">
+              <div className="contact__phone-header">
+                <span className="contact__phone-icon" aria-hidden="true">&#9742;</span>
+                <div>
+                  <div className="contact__phone-label">Direct Helpline &bull; Malda</div>
+                  <a href="tel:+917001516219" className="contact__phone-num">
+                    +91 70015 16219
+                  </a>
                 </div>
-              ))}
+              </div>
+              <p className="contact__phone-sub">
+                Speak directly with our local solar advisor (Mon–Sat, 9:00 AM – 7:00 PM).
+              </p>
+              <a
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-whatsapp contact__wa-btn"
+                id="contact-whatsapp-btn"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                WhatsApp Advisor Now
+              </a>
             </div>
           </div>
 
-          <div ref={formRef} className={`dealer-contact__form-wrap reveal-right ${formVisible ? 'reveal-right--visible' : ''}`} id="contact-form">
+          {/* Right: Form */}
+          <div className="contact__form-wrap">
             {submitted ? (
-              <div className="dealer-contact__success">
-                <div className="dealer-contact__success-icon">✅</div>
-                <h3>{t.contact.successTitle}</h3>
-                <p>{t.contact.successDesc}</p>
+              <div className="contact__success">
+                <div className="contact__success-icon">&#10003;</div>
+                <h3 className="contact__success-title">Callback Request Sent</h3>
+                <p className="contact__success-desc">
+                  We've initiated WhatsApp with your information. Our Malda representative will verify your site details and connect with you shortly.
+                </p>
+                <button
+                  type="button"
+                  className="btn-outline"
+                  onClick={() => setSubmitted(false)}
+                >
+                  Submit Another Query
+                </button>
               </div>
             ) : (
-              <>
-                <h3 className="dealer-contact__form-title">{t.contact.formTitle}</h3>
-                <form className="dealer-contact__form" onSubmit={handleSubmit} noValidate>
-                  <div className="form-field">
-                    <label htmlFor="contact-name">{t.contact.nameLabel}</label>
-                    <input id="contact-name" type="text" placeholder={t.contact.namePlaceholder} value={form.name} onChange={handleChange('name')} />
-                    {errors.name && <span className="form-error">{errors.name}</span>}
+              <form className="contact__form" onSubmit={handleSubmit} id="contact-form">
+                <h3 className="contact__form-heading">Request a Solar Callback</h3>
+                <p className="contact__form-subhead">
+                  Fill in your details for a personalized capacity estimate and feasibility check.
+                </p>
+
+                <div className="contact__form-group">
+                  <label htmlFor="name" className="contact__form-label">Full Name *</label>
+                  <input
+                    id="name"
+                    ref={nameInputRef}
+                    name="name"
+                    type="text"
+                    className="contact__form-input"
+                    placeholder="Enter your name"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="contact__form-row">
+                  <div className="contact__form-group">
+                    <label htmlFor="mobile" className="contact__form-label">Mobile Number *</label>
+                    <input
+                      id="mobile"
+                      name="mobile"
+                      type="tel"
+                      className="contact__form-input"
+                      placeholder="10-digit mobile number"
+                      value={form.mobile}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
 
-                  <div className="form-row">
-                    <div className="form-field">
-                      <label htmlFor="contact-mobile">{t.contact.mobileLabel}</label>
-                      <input id="contact-mobile" type="tel" placeholder={t.contact.mobilePlaceholder} maxLength={10} value={form.mobile} onChange={handleChange('mobile')} />
-                      {errors.mobile && <span className="form-error">{errors.mobile}</span>}
-                    </div>
+                  <div className="contact__form-group">
+                    <label htmlFor="pincode" className="contact__form-label">PIN Code *</label>
+                    <input
+                      id="pincode"
+                      name="pincode"
+                      type="text"
+                      inputMode="numeric"
+                      className="contact__form-input"
+                      placeholder="e.g. 732101"
+                      value={form.pincode}
+                      onChange={handleChange}
+                      maxLength={6}
+                      required
+                    />
+                  </div>
+                </div>
 
-                    <div className="form-field">
-                      <label htmlFor="contact-pincode">{t.contact.pincodeLabel}</label>
-                      <input
-                        id="contact-pincode"
-                        type="text"
-                        inputMode="numeric"
-                        placeholder="e.g. 732101"
-                        maxLength={6}
-                        value={form.pincode}
-                        onChange={handleChange('pincode')}
-                      />
-                      {errors.pincode && <span className="form-error">{errors.pincode}</span>}
-                    </div>
+                {/* Inline Pincode Validation Feedback */}
+                {pincodeStatus && (
+                  <div className={`contact__pin-feedback contact__pin-feedback--${pincodeStatus.type}`}>
+                    {pincodeStatus.type === 'available' && (
+                      <span>&#10003; <strong>{pincodeStatus.area}</strong> ({pincodeStatus.block}) &bull; Active Coverage Zone</span>
+                    )}
+                    {pincodeStatus.type === 'malda-district' && (
+                      <span>&#9888; Malda District &bull; Coverage Confirmed on Review</span>
+                    )}
+                    {pincodeStatus.type === 'nearby' && (
+                      <span>&#8505; Neighboring District &bull; Regional Coordination Available</span>
+                    )}
+                    {pincodeStatus.type === 'outside' && (
+                      <span>Outside Primary Malda Zone</span>
+                    )}
+                  </div>
+                )}
+
+                <div className="contact__form-row">
+                  <div className="contact__form-group">
+                    <label htmlFor="block" className="contact__form-label">Block in Malda</label>
+                    <input
+                      id="block"
+                      name="block"
+                      type="text"
+                      className="contact__form-input"
+                      placeholder="e.g. English Bazar, Gazole..."
+                      value={form.block}
+                      onChange={handleChange}
+                    />
                   </div>
 
-                  {/* Dynamic in-form pincode feedback badge */}
-                  {formPincodeResult && (
-                    <div className={`form-pincode-badge form-pincode-badge--${formPincodeResult.status}`}>
-                      <span className="form-pincode-badge__icon">
-                        {formPincodeResult.status === 'available' ? '🎉' : '⚠️'}
-                      </span>
-                      <div>
-                        <strong>{formPincodeResult.message}</strong>
-                      </div>
-                    </div>
-                  )}
+                  <div className="contact__form-group">
+                    <label htmlFor="area" className="contact__form-label">Village / Locality</label>
+                    <input
+                      id="area"
+                      name="area"
+                      type="text"
+                      className="contact__form-input"
+                      placeholder="e.g. Rathbari, Sujapur..."
+                      value={form.area}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
 
-                  <div className="form-row">
-                    <div className="form-field">
-                      <label htmlFor="contact-block">{t.contact.blockLabel}</label>
-                      <input id="contact-block" type="text" placeholder={t.contact.blockPlaceholder} value={form.block} onChange={handleChange('block')} />
-                      {errors.block && <span className="form-error">{errors.block}</span>}
-                    </div>
-                    <div className="form-field">
-                      <label htmlFor="contact-village">{t.contact.villageLabel}</label>
-                      <input id="contact-village" type="text" placeholder={t.contact.villagePlaceholder} value={form.village} onChange={handleChange('village')} />
-                      {errors.village && <span className="form-error">{errors.village}</span>}
-                    </div>
+                <div className="contact__form-row">
+                  <div className="contact__form-group">
+                    <label htmlFor="bill" className="contact__form-label">Approx Monthly Bill</label>
+                    <input
+                      id="bill"
+                      name="bill"
+                      type="text"
+                      className="contact__form-input"
+                      placeholder="e.g. ₹1,200 – ₹2,500"
+                      value={form.bill}
+                      onChange={handleChange}
+                    />
                   </div>
 
-                  <div className="form-row">
-                    <div className="form-field">
-                      <label htmlFor="contact-bill">{t.contact.billLabel}</label>
-                      <input id="contact-bill" type="text" placeholder={t.contact.billPlaceholder} value={form.bill} onChange={handleChange('bill')} />
-                      {errors.bill && <span className="form-error">{errors.bill}</span>}
-                    </div>
-                    <div className="form-field">
-                      <label htmlFor="contact-capacity">{t.contact.capacityLabel}</label>
-                      <select id="contact-capacity" value={form.capacity} onChange={handleChange('capacity')}>
-                        <option value="">{t.contact.capacitySelect}</option>
-                        <option value="1 KW">1 KW</option>
-                        <option value="2 KW">2 KW</option>
-                        <option value="3 KW">3 KW</option>
-                        <option value="4 KW">4 KW</option>
-                        <option value="5 KW">5 KW</option>
-                        <option value="5+ KW">5+ KW</option>
-                        <option value="Not sure">{t.contact.capacityNotSure}</option>
-                      </select>
-                    </div>
+                  <div className="contact__form-group">
+                    <label htmlFor="capacity" className="contact__form-label">System Preference</label>
+                    <select
+                      id="capacity"
+                      name="capacity"
+                      className="contact__form-input contact__form-select"
+                      value={form.capacity}
+                      onChange={handleChange}
+                    >
+                      <option value="1 KW (Starter)">1 KW (Starter)</option>
+                      <option value="2 KW (Recommended)">2 KW (Recommended)</option>
+                      <option value="3 KW (Large Home)">3 KW (Large Home)</option>
+                      <option value="5 KW (Premium Home)">5 KW (Premium Home)</option>
+                      <option value="10 KW (High Capacity)">10 KW (High Capacity)</option>
+                      <option value="Not Sure - Suggest Best">Not Sure - Suggest Best</option>
+                    </select>
                   </div>
+                </div>
 
-                  <button type="submit" className="form-submit" id="form-submit-btn">
-                    <span className="form-submit__shimmer"></span>
-                    {t.contact.submitBtn}
-                  </button>
-                </form>
-              </>
+                <button type="submit" className="btn-primary contact__submit" id="contact-submit-btn">
+                  Request Solar Callback on WhatsApp
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                <p className="contact__form-note">
+                  Submitting will securely format your details into WhatsApp for instant response from our Malda representative. No spam, ever.
+                </p>
+              </form>
             )}
           </div>
         </div>
