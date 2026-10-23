@@ -1,0 +1,4 @@
+loom_solar_app/
+.git
+node_modules/
+dist/
