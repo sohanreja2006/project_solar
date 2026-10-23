@@ -45,7 +45,7 @@ export async function authenticateAdmin(email, uniqueId) {
       loggedInAt: new Date().toISOString(),
       expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
     };
-    sessionStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(session));
+    saveSession(session);
     return { success: true, session };
   }
 
@@ -68,7 +68,7 @@ export async function authenticateAdmin(email, uniqueId) {
           loggedInAt: new Date().toISOString(),
           expiresAt: Date.now() + 24 * 60 * 60 * 1000,
         };
-        sessionStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(session));
+        saveSession(session);
         return { success: true, session };
       }
     } catch {
@@ -79,13 +79,19 @@ export async function authenticateAdmin(email, uniqueId) {
   return { success: false, error: 'Invalid admin email or unique ID.' };
 }
 
+function saveSession(session) {
+  const str = JSON.stringify(session);
+  try { localStorage.setItem(ADMIN_STORAGE_KEY, str); } catch {}
+  try { sessionStorage.setItem(ADMIN_STORAGE_KEY, str); } catch {}
+}
+
 export function getAdminSession() {
   try {
-    const raw = sessionStorage.getItem(ADMIN_STORAGE_KEY);
+    const raw = localStorage.getItem(ADMIN_STORAGE_KEY) || sessionStorage.getItem(ADMIN_STORAGE_KEY);
     if (!raw) return null;
     const session = JSON.parse(raw);
     if (session.expiresAt && Date.now() > session.expiresAt) {
-      sessionStorage.removeItem(ADMIN_STORAGE_KEY);
+      logoutAdmin();
       return null;
     }
     return session;
@@ -95,5 +101,7 @@ export function getAdminSession() {
 }
 
 export function logoutAdmin() {
-  sessionStorage.removeItem(ADMIN_STORAGE_KEY);
+  try { localStorage.removeItem(ADMIN_STORAGE_KEY); } catch {}
+  try { sessionStorage.removeItem(ADMIN_STORAGE_KEY); } catch {}
 }
+

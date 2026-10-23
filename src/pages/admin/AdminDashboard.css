@@ -737,6 +737,69 @@
   line-height: 1.6;
 }
 
+/* Database Count Badge in Navbar */
+.ad-db-count-badge {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #0369a1;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Fetch Error Alert */
+.ad-fetch-error-banner {
+  background: #fef2f2;
+  border-bottom: 1px solid #fecaca;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: #b91c1c;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.ad-btn-retry {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ad-btn-retry:hover {
+  background: #0369a1;
+}
+
+/* Reset Filters Button in Empty State */
+.ad-btn-reset-filters {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+  transition: all 0.2s ease;
+  margin-top: 6px;
+}
+
+.ad-btn-reset-filters:hover {
+  background: #0369a1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
+}
+
 @media (max-width: 900px) {
   .ad-navbar { padding: 12px 16px; }
   .ad-main { padding: 16px; }

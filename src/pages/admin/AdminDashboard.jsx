@@ -14,6 +14,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState(null);
+  const [fetchError, setFetchError] = useState(null);
 
   // Search & Filter State
   const [search, setSearch] = useState('');
@@ -38,19 +39,28 @@ export default function AdminDashboard() {
 
   // Fetch Applications from Supabase
   const fetchApplications = async () => {
-    if (!supabase) return;
+    if (!supabase) {
+      setFetchError('Database client is not available.');
+      setLoading(false);
+      return;
+    }
     setSyncing(true);
+    setFetchError(null);
     try {
       const { data, error } = await supabase
         .from('solar_applications')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        setFetchError(error.message || 'Database error fetching applications');
+        throw error;
+      }
       setApplications(data || []);
       setLastSyncTime(new Date());
     } catch (err) {
       console.error('Error fetching applications:', err);
+      setFetchError(err.message || 'Error connecting to database.');
     } finally {
       setSyncing(false);
       setLoading(false);
@@ -289,6 +299,10 @@ export default function AdminDashboard() {
         </div>
 
         <div className="ad-navbar__actions">
+          <span className="ad-db-count-badge" title="Total Applications Loaded">
+            📁 {applications.length} Records
+          </span>
+
           <div className="ad-sync-indicator" title="Connected to Supabase Realtime">
             <span className="ad-sync-dot" />
             <span className="ad-sync-text">
@@ -481,6 +495,15 @@ export default function AdminDashboard() {
 
         {/* Applications Table */}
         <section className="ad-table-card">
+          {fetchError && (
+            <div className="ad-fetch-error-banner">
+              <span>⚠️ {fetchError}</span>
+              <button type="button" className="ad-btn-retry" onClick={fetchApplications}>
+                🔄 Retry Connection
+              </button>
+            </div>
+          )}
+
           {loading ? (
             <div className="ad-loading-state">
               <div className="ad-spinner-big" />
@@ -493,8 +516,31 @@ export default function AdminDashboard() {
               <p>
                 {applications.length === 0
                   ? 'No applicants have submitted the online form yet. Any new submission on the website will sync here automatically in real time!'
-                  : 'No records match your active search or filter criteria.'}
+                  : `No records match your active search or filter criteria. (${applications.length} applications loaded in database)`}
               </p>
+              {applications.length > 0 ? (
+                <button
+                  type="button"
+                  className="ad-btn-reset-filters"
+                  onClick={() => {
+                    setSearch('');
+                    setStatusFilter('ALL');
+                    setBlockFilter('ALL');
+                    setSolarFilter('ALL');
+                    setCompanyFilter('ALL');
+                  }}
+                >
+                  ⚡ Show All {applications.length} Applications (Clear Filters)
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="ad-btn-retry"
+                  onClick={fetchApplications}
+                >
+                  🔄 Refresh Database
+                </button>
+              )}
             </div>
           ) : (
             <div className="ad-table-responsive">
