@@ -121,6 +121,19 @@
   transform: translateX(3px);
 }
 
+.footer__link--admin {
+  color: #38bdf8 !important;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.footer__link--admin:hover {
+  color: #7dd3fc !important;
+}
+
 /* Contact Box */
 .footer__contact {
   display: flex;
@@ -215,6 +228,29 @@
 .footer__copyright strong {
   color: #fbbf24;
   font-weight: 600;
+}
+
+.footer__admin-portal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  color: #38bdf8;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-decoration: none;
+  width: fit-content;
+  transition: all 0.2s ease;
+  margin-bottom: 2px;
+}
+
+.footer__admin-portal-badge:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
 }
 
 .footer__developer-credit {

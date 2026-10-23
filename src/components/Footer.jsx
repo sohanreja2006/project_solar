@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
 export default function Footer() {
@@ -39,6 +40,7 @@ export default function Footer() {
               <button className="footer__link" onClick={() => scrollTo('#apply')}>Apply Online</button>
               <button className="footer__link" onClick={() => scrollTo('#distributor')}>Distributor Profile</button>
               <button className="footer__link" onClick={() => scrollTo('#contact')}>Request Callback</button>
+              <Link to="/admin/login" className="footer__link footer__link--admin">🛡️ Admin Portal</Link>
             </div>
           </div>
 
@@ -80,6 +82,9 @@ export default function Footer() {
             <p className="footer__bottom-sub">Authorized SR Channel Partner for Malda District, West Bengal.</p>
           </div>
           <div className="footer__bottom-right">
+            <Link to="/admin/login" className="footer__admin-portal-badge">
+              🛡️ Staff &amp; Admin Portal
+            </Link>
             <p className="footer__developer-credit">
               Created And Developed By <strong>@ Ahammed Sohan Reja</strong>
             </p>

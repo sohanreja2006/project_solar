@@ -212,6 +212,51 @@
   color: #94a3b8;
 }
 
+/* Quick Fill Master Admin Helper */
+.al-quick-fill {
+  background: #f0f9ff;
+  border: 1px dashed #7dd3fc;
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.al-quick-fill__label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #0369a1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.al-quick-fill__chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.al-quick-btn {
+  background: #ffffff;
+  border: 1px solid #bae6fd;
+  color: #0284c7;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.al-quick-btn:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  transform: translateY(-1px);
+}
+
 /* Submit Button */
 .al-submit-btn {
   display: inline-flex;

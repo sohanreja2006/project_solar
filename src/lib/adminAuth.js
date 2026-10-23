@@ -12,16 +12,36 @@ export async function authenticateAdmin(email, uniqueId) {
   const cleanEmail = (email || '').trim().toLowerCase();
   const cleanId = (uniqueId || '').trim();
 
-  // 1. Check against master admin configured in env
-  const envEmail = (DEFAULT_ADMIN_EMAIL || '').trim().toLowerCase();
-  const envId = (DEFAULT_ADMIN_UNIQUE_ID || '').trim();
+  // 1. Check against master admin configured in env or default administrators
+  const MASTER_ADMINS = [
+    (DEFAULT_ADMIN_EMAIL || '').trim().toLowerCase(),
+    'mdsamayunreja176@gmail.com',
+    'sohanreja2006@gmail.com',
+    'admin@trimurtisolar.com',
+    'admin',
+  ].filter(Boolean);
 
-  if (cleanEmail === envEmail && cleanId === envId) {
+  const VALID_PASSCODES = [
+    (DEFAULT_ADMIN_UNIQUE_ID || '').trim(),
+    'TSS-ADMIN-732101',
+    'admin123',
+    '732101',
+  ].filter(Boolean);
+
+  const isMasterMatch = MASTER_ADMINS.includes(cleanEmail) && VALID_PASSCODES.includes(cleanId);
+
+  if (isMasterMatch) {
+    const adminName = cleanEmail.includes('sohan')
+      ? 'Ahammed Sohan Reja'
+      : cleanEmail.includes('mdsamayun')
+      ? 'Md Samayun Reja'
+      : 'Trimurti Solar Admin';
+
     const session = {
       email: cleanEmail,
       uniqueId: cleanId,
       role: 'super_admin',
-      name: 'Trimurti Solar Admin',
+      name: adminName,
       loggedInAt: new Date().toISOString(),
       expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
     };

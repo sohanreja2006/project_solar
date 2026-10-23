@@ -140,6 +140,37 @@ export default function AdminLogin() {
               </div>
             </div>
 
+            {/* Quick Master Admin Helper */}
+            <div className="al-quick-fill">
+              <div className="al-quick-fill__label">
+                <span>⚡ Authorized Admin 1-Click Fill:</span>
+              </div>
+              <div className="al-quick-fill__chips">
+                <button
+                  type="button"
+                  className="al-quick-btn"
+                  onClick={() => {
+                    setEmail('mdsamayunreja176@gmail.com');
+                    setUniqueId('TSS-ADMIN-732101');
+                    setError(null);
+                  }}
+                >
+                  👤 MD Samayun Reja
+                </button>
+                <button
+                  type="button"
+                  className="al-quick-btn"
+                  onClick={() => {
+                    setEmail('sohanreja2006@gmail.com');
+                    setUniqueId('TSS-ADMIN-732101');
+                    setError(null);
+                  }}
+                >
+                  👤 Sohan Reja
+                </button>
+              </div>
+            </div>
+
             <button type="submit" className="al-submit-btn" disabled={loading}>
               {loading ? (
                 <>
