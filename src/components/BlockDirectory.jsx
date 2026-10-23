@@ -139,7 +139,7 @@ export default function BlockDirectory() {
           </div>
         ) : (
           /* Normal Block Navigation &
-          all the gp should be  affected by the  ain a
+          all the gp should be  affected by the main authorities of the, but s
           GP Listing */
           <div className="bdir-main">
             {/* 15 Blocks Interactive Tabs */}
