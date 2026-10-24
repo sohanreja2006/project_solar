@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authenticateAdmin, getAdminSession } from '../../lib/adminAuth';
+import MathCaptcha from '../../components/MathCaptcha';
 import './AdminLogin.css';
 
 export default function AdminLogin() {
@@ -10,6 +11,8 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const captchaRef = useRef();
+  const [captchaValid, setCaptchaValid] = useState(false);
 
   useEffect(() => {
     // If already logged in, redirect directly to dashboard
@@ -25,6 +28,10 @@ export default function AdminLogin() {
 
     if (!email.trim() || !uniqueId.trim()) {
       setError('Please enter both your registered Admin Email and Unique ID.');
+      return;
+    }
+    if (!captchaRef.current?.validate()) {
+      setError('Please complete the human verification (math captcha).');
       return;
     }
 
@@ -95,7 +102,7 @@ export default function AdminLogin() {
                   placeholder="admin@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="email"
+                  autoComplete="off"
                   required
                 />
               </div>
@@ -114,7 +121,7 @@ export default function AdminLogin() {
                   className="al-input"
                   value={uniqueId}
                   onChange={(e) => setUniqueId(e.target.value)}
-                  autoComplete="current-password"
+                  autoComplete="off"
                   required
                 />
                 {uniqueId && (
@@ -140,38 +147,15 @@ export default function AdminLogin() {
               </div>
             </div>
 
-            {/* Quick Master Admin Helper */}
-            <div className="al-quick-fill">
-              <div className="al-quick-fill__label">
-                <span>⚡ Authorized Admin 1-Click Fill:</span>
-              </div>
-              <div className="al-quick-fill__chips">
-                <button
-                  type="button"
-                  className="al-quick-btn"
-                  onClick={() => {
-                    setEmail('mdsamayunreja176@gmail.com');
-                    setUniqueId('TSS-ADMIN-732101');
-                    setError(null);
-                  }}
-                >
-                  👤 MD Samayun Reja
-                </button>
-                <button
-                  type="button"
-                  className="al-quick-btn"
-                  onClick={() => {
-                    setEmail('sohanreja2006@gmail.com');
-                    setUniqueId('TSS-ADMIN-732101');
-                    setError(null);
-                  }}
-                >
-                  👤 Sohan Reja
-                </button>
-              </div>
-            </div>
 
-            <button type="submit" className="al-submit-btn" disabled={loading}>
+
+            <MathCaptcha
+              ref={captchaRef}
+              variant="admin"
+              onValidChange={setCaptchaValid}
+            />
+
+            <button type="submit" className="al-submit-btn" disabled={loading || !captchaValid}>
               {loading ? (
                 <>
                   <span className="al-spinner" /> Verifying Access...

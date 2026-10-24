@@ -282,6 +282,17 @@ export default function AdminDashboard() {
     }
   };
 
+  // Debug logging
+  console.log('[AdminDashboard] Render:', {
+    session: !!session,
+    loading,
+    syncing,
+    applicationsCount: applications.length,
+    filteredCount: filteredApplications.length,
+    fetchError,
+    stats,
+  });
+
   return (
     <div className="ad-container">
       
@@ -343,10 +354,10 @@ export default function AdminDashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="ad-main">
+      <div className="ad-main" style={{ display: 'flex', flexDirection: 'column', gap: '24px', opacity: 1, visibility: 'visible', minHeight: '60vh' }}>
         
         {/* Stats Section with Dynamic Block Breakdown */}
-        <section className="ad-stats-section">
+        <section className="ad-stats-section" style={{ display: 'flex', flexDirection: 'column', gap: '12px', opacity: 1, visibility: 'visible' }}>
           <div className="ad-stats-header">
             <div className="ad-stats-header__info">
               <span className="ad-stats-header__badge">
@@ -494,7 +505,7 @@ export default function AdminDashboard() {
         </section>
 
         {/* Applications Table */}
-        <section className="ad-table-card">
+        <section className="ad-table-card" style={{ display: 'block', opacity: 1, visibility: 'visible', minHeight: '200px' }}>
           {fetchError && (
             <div className="ad-fetch-error-banner">
               <span>⚠️ {fetchError}</span>
@@ -668,7 +679,7 @@ export default function AdminDashboard() {
           )}
         </section>
 
-      </main>
+      </div>
 
       {/* Applicant Dossier & QR Modal */}
       {selectedApplicant && (

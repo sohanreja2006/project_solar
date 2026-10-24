@@ -58,21 +58,13 @@ export default function Navbar() {
             Apply Online
           </button>
           <button className="navbar__link" onClick={() => scrollTo('#contact')}>Contact</button>
-          <Link to="/admin/login" className="navbar__link navbar__link--admin" title="Admin Control Center">
-            🛡️ Admin
-          </Link>
+
 
           <div className="navbar__mobile-actions">
             <a href="tel:+917001516219" className="navbar__mobile-phone">
               &#9742; Call: 7001516219
             </a>
-            <Link
-              to="/admin/login"
-              className="navbar__admin-btn--mobile"
-              onClick={() => setMobileOpen(false)}
-            >
-              🛡️ Admin Control Portal
-            </Link>
+
             {user ? (
               <Link
                 to="/dashboard"

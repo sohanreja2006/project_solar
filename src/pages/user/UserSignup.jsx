@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../../lib/userAuth';
 import { useUserAuth } from '../../context/UserAuthContext';
+import MathCaptcha from '../../components/MathCaptcha';
 import './UserAuth.css';
 
 export default function UserSignup() {
@@ -17,6 +18,8 @@ export default function UserSignup() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const captchaRef = useRef();
+  const [captchaValid, setCaptchaValid] = useState(false);
 
   const handleChange = (e) => {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -45,6 +48,10 @@ export default function UserSignup() {
     const err = validate();
     if (Object.keys(err).length) {
       setErrors(err);
+      return;
+    }
+    if (!captchaRef.current?.validate()) {
+      setSubmitError('Please complete the human verification (math captcha).');
       return;
     }
     setLoading(true);
@@ -401,10 +408,15 @@ export default function UserSignup() {
                 </div>
               )}
 
+              <MathCaptcha
+                ref={captchaRef}
+                onValidChange={setCaptchaValid}
+              />
+
               <button
                 type="submit"
                 className="uauth-submit-btn"
-                disabled={loading}
+                disabled={loading || !captchaValid}
                 id="user-signup-submit"
               >
                 {loading ? (

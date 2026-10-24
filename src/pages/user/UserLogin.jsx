@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { loginUser } from '../../lib/userAuth';
 import { useUserAuth } from '../../context/UserAuthContext';
+import MathCaptcha from '../../components/MathCaptcha';
 import './UserAuth.css';
 
 const WHATSAPP_HELP = 'https://wa.me/917001516219?text=Hello%20Trimurti%20Solar%2C%20I%20am%20still%20unable%20to%20login%20to%20my%20account.%20Please%20help%20me.';
@@ -13,6 +14,8 @@ export default function UserLogin() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const captchaRef = useRef();
+  const [captchaValid, setCaptchaValid] = useState(false);
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
@@ -21,6 +24,10 @@ export default function UserLogin() {
     setError('');
     if (!form.username.trim() || !form.password) {
       setError('Please enter your username and password.');
+      return;
+    }
+    if (!captchaRef.current?.validate()) {
+      setError('Please complete the human verification (math captcha).');
       return;
     }
     setLoading(true);
@@ -225,10 +232,15 @@ export default function UserLogin() {
                 </div>
               )}
 
+              <MathCaptcha
+                ref={captchaRef}
+                onValidChange={setCaptchaValid}
+              />
+
               <button
                 type="submit"
                 className="uauth-submit-btn"
-                disabled={loading}
+                disabled={loading || !captchaValid}
                 id="user-login-submit"
               >
                 {loading ? (
